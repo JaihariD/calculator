@@ -1,0 +1,125 @@
+<html>
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="index">
+        <a class="cgpaBtn btn" href="cgpa.html">cgpa calculator</a>
+        <a class="billBtn btn" href="bill.html">bill calculator</a>
+        <a class="normalBtn btn" href="calculator.html">normal calculator</a>
+    </div> 
+</body>
+</html>
+
+<style>
+    .index
+    {
+        width: 50%;
+        height:50%;
+        background-color: rgba(221, 221, 221,0.1);
+       position:relative;
+       display:flex;
+       flex-direction:column;
+    border-radius:10px 10px;
+   align-items:center;
+        justify-content:space-around; 
+    transform:translateX(-50%) translateY(-50%);
+    left:50%;
+    top:50%;
+    }
+    body{
+        width:100wh;
+        height:99vh;
+        background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+	background-size: 400% 400%;
+	animation: gradient 10s ease infinite;
+    }
+    
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+    .btn
+    {
+        
+        width:130px;
+        border-radius:3px 3px ;
+        text-align:center;
+        height:50px;
+        font-size:15px;
+        font-family: 'Roboto', sans-serif;
+        display:flex;
+        color:white;
+        font-weight:bold;
+        overflow: hidden;
+        align-items:center;
+        justify-content:center;  
+        background-color: rgb(66, 133, 244);
+
+
+
+        text-decoration:none;
+       
+        position:relative;
+    }
+    .btn::before
+    {
+        content:"";
+        display:block;
+        border-radius:50%;
+        background-color:rgba(255, 255, 255, 0.25);
+        width:0%;
+        height:0%;
+        position:absolute;
+
+    }
+    .btn:hover::before
+    {
+        animation:expand .7s forwards ;
+    
+    }
+    @keyframes expand
+    {
+        0%
+        {
+            width:0%;
+        height:0%;
+        opacity:1;
+        }
+     
+        100%
+        {
+            width:900px;
+        height:900px;
+        opacity:0;
+        }
+    }
+    .btn:not(:hover)::before
+    {  
+        animation:shrink .7s forwards;
+    }
+    @keyframes shrink
+    {
+        0%
+        {
+            width:900px;
+        height:900px;
+        opacity:1;
+        }
+        100%
+        {
+            width:0px;
+        height:0px;
+        opacity:0;
+        }
+    }
+  
+    
+</style>

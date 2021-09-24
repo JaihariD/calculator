@@ -1,0 +1,258 @@
+<html>
+    <body>
+        
+
+            <div id="displayWrap" class="noselect">
+                <div id="display">Calculator</div>
+                <p id="miniDisplay" style="font-size:30px;">&nbsp;</p>
+            </div>
+        
+            <div id="button-wrapper">
+                <div class="span-wrap">
+                    <span id="seven" class="noselect">7</span>
+                    <span id="eight" class="noselect">8</span>
+                    <span id="nine" class="noselect">9</span>
+                    <span id="divide" class="noselect">/</span>
+                </div>
+                <div class="span-wrap">
+                    <span id="four" class="noselect">4</span>
+                    <span id="five" class="noselect">5</span>
+                    <span id="six" class="noselect">6</span>
+                    <span id="times" class="noselect">*</span>
+                </div>
+                <div class="span-wrap">
+                    <span id="one" class="noselect">1</span>
+                    <span id="two" class="noselect">2</span>
+                    <span id="three" class="noselect">3</span>
+                    <span id="minus" class="noselect">-</span>
+                </div>
+                <div class="span-wrap">
+                    <span id="clear" class="noselect">CE</span>
+                    <span id="zero" class="noselect">0</span>
+                    <span id="equals" class="noselect">=</span>
+                    <span id="plus" class="noselect">+</span>
+                </div>
+            </div>
+        
+    </body>
+</html>
+<script>
+var model = {
+    sum: 0,
+    current: "",
+    arr: [0],
+    numArray: [
+        "one", "two", "three", "four", "five",
+        "six", "seven", "eight", "nine", "zero"
+    ],
+    operands: ["plus", "minus", "times", "divide"],
+}
+
+
+var controller = {
+    init: function() {
+        view.init();
+    },
+    getNumbers: function() {
+        return model.numArray;
+    },
+    getOperands: function() {
+        return model.operands;
+    },
+    getCurrent: function() {
+        return model.current;
+    },
+    changeCurrent: function(data) {
+        model.current += data;
+    },
+    resetCurrent: function() {
+        model.current = "";
+    },
+    clearClick: function() {
+        model.sum = 0;
+        model.arr = [0];
+        controller.resetCurrent();
+    },
+    getSum: function() {
+        return model.sum;
+    },
+    getArr: function() {
+        return model.arr;
+    },
+    //this function does the math
+    equalClick: function() {
+        if (model.current) {
+            model.arr.push(parseInt(model.current));
+            model.current = "";
+            var sum = 0;
+            sum += model.arr[1];
+
+            for (var i = 3; i < model.arr.length; i++) {
+                if (model.arr[i] != null) {
+                    if (model.arr[i - 1] == "+") {
+                        sum += model.arr[i];
+                    } else if (model.arr[i - 1] == "-") {
+                        sum -= model.arr[i];
+                    } else if (model.arr[i - 1] == "*") {
+                        sum *= model.arr[i];
+                    } else if (model.arr[i - 1] == "/") {
+                        sum /= model.arr[i];
+                    }
+                }
+            }
+            model.sum = sum;
+        };
+    },
+    //this function pushes operands to the model array
+    click: function(op) {
+        function pushArr(arg) {
+            console.log(controller.getArr());
+            model.arr.push(parseInt(model.current));
+            model.arr.push(arg);
+            model.current = "";
+            console.log(controller.getArr());
+        };
+        if (op == "+") {
+            pushArr("+");
+        } else if (op == "-") {
+            pushArr("-");
+        } else if (op == "*") {
+            pushArr("*");
+        } else if (op == "/") {
+            pushArr("/");
+        };
+    },
+};
+
+//view
+var view = {
+    init: function() {
+
+        //variables
+        var self = this;
+        this.display = document.getElementById('display');
+        this.mini = document.getElementById('miniDisplay');
+        this.equals = document.getElementById("equals");
+        this.clear = document.getElementById("clear");
+        this.opFlag = false;
+        this.equalFlag = false;
+
+        //create click event for numbers
+        controller.getNumbers().forEach(function(item) {
+
+            var elem = document.getElementById(item);
+            elem.addEventListener('click', function(item) {
+                if (!self.equalFlag) {
+                    controller.changeCurrent(this.innerHTML);
+                    self.opFlag = true;
+                    view.render();
+                }
+            });
+        });
+
+        //create click event for operands
+        controller.getOperands().forEach(function(item) {
+
+            var elem = document.getElementById(item);
+            elem.addEventListener('click', function() {
+                if (self.opFlag) {
+                    controller.click(this.innerHTML);
+                    self.opFlag = false;
+                    self.equalFlag = false;
+                    view.render();
+                }
+            });
+        });
+
+        //create click event for equals
+        this.equals.addEventListener('click', function() {
+            if (controller.getCurrent()) {
+                var temp = controller.getArr();
+                if (temp.length > 2) {
+                    controller.equalClick();
+                    view.render();
+                    self.equalFlag = true;
+                }
+            }
+
+        });
+
+        //create click event for clear
+        this.clear.addEventListener('click', function() {
+            controller.clearClick();
+            view.render();
+            self.opFlag = false;
+            self.equalFlag = false;
+            document.getElementById('miniDisplay').innerHTML = "&nbsp;";
+        })
+    },
+
+    //support function for render returns parsed string
+    parseMiniDisplay: function() {
+        var algArr = controller.getArr().slice();
+        algArr = algArr.splice(1, algArr.length - 1);
+        algArr.push(controller.getCurrent());
+        var str = algArr.join(" ");
+        str = str.replace(/NaN/g, "");
+        return str;
+    },
+
+    //render view
+    render: function() {
+        this.display.innerHTML = controller.getSum();
+        this.mini.innerHTML = view.parseMiniDisplay();
+    }
+}
+
+controller.init();
+</script>
+
+<style>
+body {
+    height: 100%;
+    font-family: 'Open Sans', sans-serif;
+    background-color: #2962FF;
+    color: white;
+}
+#displayWrap {
+    text-align: center;
+}
+#display {
+    font-size: 4em;
+}
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* Internet Explorer/Edge */
+  user-select: none;           /* Non-prefixed version, currently
+                                  not supported by any browser */
+}
+.span-wrap {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    background: #2962FF;
+}
+span {
+    width: 25%;
+    text-align: center;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    font-size: 1.5em;
+    background: #2979FF;
+    border: 2px solid #2962FF;
+    border-radius: 15px;
+}
+span:active {
+    background-color: #90CAF9;
+}
+#button-wrapper{
+  margin-left:auto;
+  margin-right:auto;
+  max-width: 600px;
+}
+
+
+    </style>
