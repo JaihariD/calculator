@@ -362,7 +362,7 @@ let grade=document.querySelectorAll('.grade');
      topArray=[],totalCreditArray=[],totalCredit=0,sum=0,cgpa=0.0;
      }
      else{
-     document.querySelector('.footerHeading').innerHTML=`CGPA:${cgpa}`;
+     document.querySelector('.footerHeading').innerHTML=`CGPA:${cgpa.toFixed(2)}`;
      document.querySelector('.footerHeading').style.color=`white`;
      }
   }
